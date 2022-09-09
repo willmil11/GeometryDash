@@ -1,0 +1,1 @@
+console.info("[Html-renderer] Loaded the HTML !");
