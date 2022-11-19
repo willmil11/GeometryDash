@@ -1,1 +1,0 @@
-console.info("[Javascript] Javascript laoded !");
