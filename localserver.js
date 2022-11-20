@@ -5,6 +5,11 @@ console.info("[LocalServer] Running...");
 
 http.createServer(function (req, res) {
     console.info("[Request] Requested url: '" + req.url + "'");
+    if (req.url === "/clear"){
+        console.clear();
+        console.info("[Console] Console has been cleared...");
+    }
+    else{
     if (req.url === "/" || ((req.url).slice(0, -("1668855878756").length)) === "/?vscodeBrowserReqId="){
         try{
             res.writeHead(200, {'Content-Type': 'text/html'});
@@ -30,5 +35,5 @@ http.createServer(function (req, res) {
             res.writeHead(404);
             res.end(("An error has occured:<br><br>" + error))
         }
-    }
+    }}
 }).listen(1234);
