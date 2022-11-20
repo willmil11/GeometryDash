@@ -1,7 +1,9 @@
 //Functions.js script
 //
 
-function mainwait(ms) {
+let Cooldown = false;
+
+function mainthreadpause(ms) {
     var date = Date.now();
     var currentDate = Date.now();
     while ((currentDate - date) < ms){
@@ -32,12 +34,13 @@ function BuildApp(){
 function Render(){
     var renderer_element = document.getElementById("renderer");
     var renderer = renderer_element.getContext("2d");
-
-    //Render player
-
+    //Clearing the renderer
     renderer.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    renderer.translate(window.innerHeight / 2, window.innerWidth / 2);
+    //Render the player
+    renderer.translate((Player.pos.x + 25), (Player.pos.y + 25));
     renderer.rotate(Player.pos.rotation);
+    renderer.translate(-(Player.pos.x + 25), -(Player.pos.y + 25));
+    
     renderer.fillStyle = "yellow";
     renderer.fillRect(Player.pos.x, Player.pos.y, 50, 50);
 }
@@ -51,25 +54,31 @@ let Player = {
     },
     rotate: async function(){
         var ticker = 0;
-        while (ticker < 360){
-            Player.pos.rotation += 3;
+        while (ticker < (360)){
+            Player.pos.rotation += 1;
             ticker += 1;
             await wait(1)
         }
-    },
-    jump: async function(){
-        Player.rotate();
-        while (Player.pos.y > (Player.ground - 70)){
-            Player.pos.y = Player.pos.y - 4;
-            Render();
-            await wait(1);
-        }
-        while (Player.pos.y < Player.ground){
-            Player.pos.y += 4;
-            Render();
-            await wait(1);
-        }
         Player.pos.rotation = 0;
         Render();
+    },
+    jump: async function(){
+        if (Cooldown === false){
+            Cooldown = true;
+            Player.rotate();
+            while (Player.pos.y > (Player.ground - 70)){
+                Player.pos.y = Player.pos.y - 4;
+                Render();
+                await wait(1);
+            }
+            while (Player.pos.y < Player.ground){
+                Player.pos.y += 4;
+                Render();
+                await wait(1);
+            }
+            Player.pos.rotation = 0;
+            Render();
+            Cooldown = false;
+        }
     }
 };
