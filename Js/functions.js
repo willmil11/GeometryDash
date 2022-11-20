@@ -2,11 +2,12 @@
 //
 
 let Cooldown = false;
+let RotateCooldown = false;
 
 function mainthreadpause(ms) {
     var date = Date.now();
     var currentDate = Date.now();
-    while ((currentDate - date) < ms){
+    while ((currentDate - date) < ms) {
         currentDate = Date.now();
     }
 }
@@ -15,7 +16,7 @@ function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function BuildApp(){
+function BuildApp() {
     document.body.innerHTML = "";
     document.body.style.overflow = "hidden";
     document.title = "Geometry Dash";
@@ -31,18 +32,20 @@ function BuildApp(){
     renderer_error_div.innerHTML += "<font color='white' face='arial'><center><big><big><big>Can't load renderer :(</big></big></big></center></font>";
 }
 
-function Render(){
+function Render() {
     var renderer_element = document.getElementById("renderer");
     var renderer = renderer_element.getContext("2d");
     //Clearing the renderer
     renderer.clearRect(0, 0, window.innerWidth, window.innerHeight);
     //Render the player
+    renderer.save();
     renderer.translate((Player.pos.x + 25), (Player.pos.y + 25));
-    renderer.rotate(Player.pos.rotation);
+    renderer.rotate((Math.PI / 180) * Player.pos.rotation);
     renderer.translate(-(Player.pos.x + 25), -(Player.pos.y + 25));
-    
+
     renderer.fillStyle = "yellow";
     renderer.fillRect(Player.pos.x, Player.pos.y, 50, 50);
+    renderer.restore();
 }
 
 let Player = {
@@ -52,30 +55,40 @@ let Player = {
         y: (window.innerHeight - 51),
         rotation: 0
     },
-    rotate: async function(){
+    rotate: async function () {
         var ticker = 0;
-        while (ticker < (360)){
-            Player.pos.rotation += 1;
-            ticker += 1;
-            await wait(1)
+        while (ticker < (360)) {
+            if (RotateCooldown === false) {
+                Player.pos.rotation += 1;
+                ticker += 1;
+                await wait(10)
+            }
+            else{
+                await wait(1);
+            }
         }
         Player.pos.rotation = 0;
-        Render();
     },
-    jump: async function(){
-        if (Cooldown === false){
+    jump: async function () {
+        if (Cooldown === false) {
+            RotateCooldown = false;
             Cooldown = true;
             Player.rotate();
-            while (Player.pos.y > (Player.ground - 70)){
+            while (Player.pos.y > (Player.ground - 70)) {
                 Player.pos.y = Player.pos.y - 4;
-                Render();
+                RotateCooldown = true;
+                await Render();
+                RotateCooldown = false;
                 await wait(1);
             }
-            while (Player.pos.y < Player.ground){
+            while (Player.pos.y < Player.ground) {
                 Player.pos.y += 4;
-                Render();
+                RotateCooldown = true;
+                await Render();
+                RotateCooldown = false;
                 await wait(1);
             }
+            RotateCooldown = true;
             Player.pos.rotation = 0;
             Render();
             Cooldown = false;
