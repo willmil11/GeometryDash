@@ -97,8 +97,9 @@ async function Render() {
             center.style.width = ((window.innerWidth / 2) + "px");
             center.style.marginTop = (((window.innerHeight / 4.5) * 2) + "px");
             center.style.backgroundColor = "rgb(21, 21, 20)";
-            center.innerHTML = "<font color='white' face='arial'><big><big><big><big><strong><div id='text'></div></strong></big></big></big></big></font>"
+            center.innerHTML = "<font color='white' face='arial'><strong><div id='text'></div></strong></font>"
             var text = document.getElementById("text");
+            text.style.fontSize = ((window.innerHeight / 10) + "px");
             text.innerHTML = "Game over";
             await wait(300);
             text.innerHTML = "3";
