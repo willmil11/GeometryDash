@@ -50,7 +50,7 @@ function BuildApp() {
     document.body.style.backgroundSize = "cover";
 }
 
-function Render() {
+async function Render() {
     var renderer_element = document.getElementById("renderer");
     var renderer = renderer_element.getContext("2d");
     //Clearing the renderer
@@ -78,9 +78,42 @@ function Render() {
     renderer.fillRect((Player.pos.x - 2), (Player.pos.y + 50), 52, 2);
     renderer.fillRect((Player.pos.x + 50), (Player.pos.y + 52), 2, -52)
     renderer.restore();
-    //Render obstacles
-    renderer.fillStyle = Obstacles.test.color;
-    renderer.fillRect(Obstacles.test.pos.x, Obstacles.test.pos.y, Obstacles.test.sizes.w, Obstacles.test.sizes.h);
+    //Obstacles
+    var index = 0;
+    while (index < (Object.keys(Obstacles).length)){
+        indexkey = Object.keys(Obstacles)[index];
+        eval(("renderer.fillStyle = Obstacles." + indexkey + ".color"));
+        eval(("renderer.fillRect(Obstacles." + indexkey + ".pos.x, Obstacles." + indexkey + ".pos.y, Obstacles." + indexkey + ".sizes.w, Obstacles." + indexkey + ".sizes.h)"));
+        var Obstaclex = eval(("Obstacles." + indexkey + ".pos.x"))
+        var Obstacley = eval(("Obstacles." + indexkey + ".pos.y"))
+        var Obstaclew = eval(("Obstacles." + indexkey + ".hitboxes.w"));
+        var Obstacleh = eval(("Obstacles." + indexkey + ".hitboxes.h"));
+        var result = eval(("CheckPlayerColisions(" + Obstaclex + ", " + Obstacley + ", " + Obstaclew + ", " + Obstacleh + ")"));
+        if (result){
+            document.body.innerHTML = "";
+            document.body.innerHTML += "<center><div id='content'></div></center>"
+            var center = document.getElementById("content");
+            center.style.height = ((window.innerHeight / 8) + "px");
+            center.style.width = ((window.innerWidth / 2) + "px");
+            center.style.marginTop = (((window.innerHeight / 4.5) * 2) + "px");
+            center.style.backgroundColor = "rgb(21, 21, 20)";
+            center.innerHTML = "<font color='white' face='arial'><big><big><big><big><strong><div id='text'></div></strong></big></big></big></big></font>"
+            var text = document.getElementById("text");
+            text.innerHTML = "Game over";
+            await wait(300);
+            text.innerHTML = "3";
+            await wait(1000);
+            text.innerHTML = "2";
+            await wait(1000);
+            text.innerHTML = "1";
+            await wait(1000);
+            ResetObjects();
+            BuildApp();
+            Controls();
+        }
+        index += 1;
+    }
+    //Fps system
     if (fps){
         fpscounter += 1;
         fpswait = 0;
@@ -92,6 +125,73 @@ function Render() {
     }
 }
 
+function ResetObjects() {
+    Player = {
+        ground: (window.innerHeight - 71),
+        pos: {
+            x: (window.innerWidth / 32),
+            y: (window.innerHeight - 71),
+            rotation: 0
+        },
+        rotate: async function () {
+            var index = 0;
+            while (index < (360)) {
+                if (RotateCooldown === false) {
+                    Player.pos.rotation += 1;
+                    index += 1;
+                    await wait(10)
+                }
+                else{
+                    await wait(1);
+                }
+            }
+            Player.pos.rotation = 0;
+        },
+        jump: async function () {
+            if (Cooldown === false) {
+                RotateCooldown = false;
+                Cooldown = true;
+                Player.rotate();
+                while (Player.pos.y > (Player.ground - 130)) {
+                    Player.pos.y = Player.pos.y - 4;
+                    RotateCooldown = true;
+                    Render();
+                    RotateCooldown = false;
+                    await wait(1);
+                }
+                while (Player.pos.y < Player.ground) {
+                    Player.pos.y += 4;
+                    RotateCooldown = true;
+                    await Render();
+                    RotateCooldown = false;
+                    await wait(5);
+                }
+                RotateCooldown = true;
+                Player.pos.rotation = 0;
+                Render();
+                Cooldown = false;
+            }
+        }
+    };
+    Obstacles = {
+        test: {
+            color: "green",
+            pos: {
+                x: (window.innerWidth / 2),
+                y: (window.innerHeight - 40)
+            },
+            sizes: {
+                w: 50,
+                h: 20
+            },
+            hitboxes: {
+                w: 50,
+                h: 30
+            }
+        }
+    }
+}
+
 let Player = {
     ground: (window.innerHeight - 71),
     pos: {
@@ -100,11 +200,11 @@ let Player = {
         rotation: 0
     },
     rotate: async function () {
-        var ticker = 0;
-        while (ticker < (360)) {
+        var index = 0;
+        while (index < (360)) {
             if (RotateCooldown === false) {
                 Player.pos.rotation += 1;
-                ticker += 1;
+                index += 1;
                 await wait(10)
             }
             else{
@@ -145,10 +245,14 @@ let Obstacles = {
         color: "green",
         pos: {
             x: (window.innerWidth / 2),
-            y: (window.innerHeight - 51)
+            y: (window.innerHeight - 40)
         },
         sizes: {
-            w: 30,
+            w: 50,
+            h: 20
+        },
+        hitboxes: {
+            w: 50,
             h: 30
         }
     }
@@ -162,9 +266,6 @@ function CheckPlayerColisions(Obstaclex, Obstacley, Obstaclew, Obstacleh){
 
 //Make the player go straight
 setInterval(() => {
-    if (CheckPlayerColisions(Obstacles.test.pos.x, Obstacles.test.pos.y, 30, 30)){
-        Player.pos.x = (window.innerWidth / 32)
-    }
     if (Player.pos.x < (window.innerWidth / 3.5)){
         if (window.innerWidth <= 500){
             Player.pos.x += 2;
@@ -191,3 +292,35 @@ setInterval(() => {
 setInterval(() => {
     Render();
 }, 1);
+
+let indexkey = "";
+setInterval(() => {
+    if ((parseInt(Player.pos.x)) >= ((parseInt(window.innerWidth / 3.5)))){
+        if (window.innerWidth <= 500){
+            var index = 0;
+            while (index < (Object.keys(Obstacles).length)){
+                indexkey = Object.keys(Obstacles)[index];
+                eval(("Obstacles." + indexkey + ".pos.x -= 2"));
+                index += 1;
+            }
+        }
+        else{
+            if (window.innerWidth <= 1000){
+                var index = 0;
+                while (index < (Object.keys(Obstacles).length)){
+                    indexkey = Object.keys(Obstacles)[index];
+                    eval(("Obstacles." + indexkey + ".pos.x -= 3"));
+                    index += 1;
+                }
+            }
+            else{
+                var index = 0;
+                while (index < (Object.keys(Obstacles).length)){
+                    indexkey = Object.keys(Obstacles)[index];
+                    eval(("Obstacles." + indexkey + ".pos.x -= 4"));
+                    index += 1;
+                }
+            }
+        }
+    }
+}, 5);
