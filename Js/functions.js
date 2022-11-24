@@ -3,17 +3,17 @@
 
 let Cooldown = false;
 let RotateCooldown = false;
-let fps = false;
-let fpscounter = 0;
-let fpscounter_ = "...";
-let fpswait = 0;
+let ips = false;
+let ipscounter = 0;
+let ipscounter_ = "...";
+let ipswait = 0;
 
-function ToogleFps(){
-    if (fps){
-        fps = false;
+function Toogleips(){
+    if (ips){
+        ips = false;
     }
     else{
-        fps = true;
+        ips = true;
     }
 }
 
@@ -114,15 +114,15 @@ async function Render() {
         }
         index += 1;
     }
-    //Fps system
-    if (fps){
-        fpscounter += 1;
-        fpswait = 0;
+    //Ips (Iteration per second) counter
+    if (ips){
+        ipscounter += 1;
+        ipswait = 0;
         renderer.fillStyle = "rgb(21, 21, 20)";
         renderer.fillRect((window.innerWidth / 1.1), 0, (window.innerWidth - (window.innerWidth / 1.1)), (window.innerHeight - (window.innerHeight / 1.05)))
         renderer.font = ((window.innerWidth / 42) + "px Arial");
         renderer.fillStyle = "white";
-        renderer.fillText((`${fpscounter_}` + " fps"), (window.innerWidth / 1.09), 13)
+        renderer.fillText((`${ipscounter_}` + " ips"), (window.innerWidth / 1.09), 13)
     }
 }
 
@@ -284,9 +284,9 @@ setInterval(() => {
 }, 5);
 
 setInterval(() => {
-    if (fps){
-        fpscounter_ = fpscounter;
-        fpscounter = 0;
+    if (ips){
+        ipscounter_ = ipscounter;
+        ipscounter = 0;
     }
 }, 1005);
 
