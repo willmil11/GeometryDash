@@ -1,12 +1,13 @@
 //Functions.js script
 //
 
-let Cooldown = false;
-let RotateCooldown = false;
-let ips = false;
-let ipscounter = 0;
-let ipscounter_ = "...";
-let ipswait = 0;
+var Cooldown = false;
+var RotateCooldown = false;
+var ips = false;
+var ipscounter = 0;
+var ipscounter_ = "...";
+var ipswait = 0;
+var fallcheck = false;
 
 function Toogleips(){
     if (ips){
@@ -114,6 +115,22 @@ async function Render() {
         }
         index += 1;
     }
+    var index = 0;
+    while (index < (Object.keys(decorations).length)){
+        indexkey = Object.keys(decorations)[index];
+        eval(("renderer.fillStyle = decorations." + indexkey + ".color"));
+        eval(("renderer.fillRect(decorations." + indexkey + ".pos.x, decorations." + indexkey + ".pos.y, decorations." + indexkey + ".sizes.w, decorations." + indexkey + ".sizes.h)"));
+        var decox = eval(("decorations." + indexkey + ".pos.x"));
+        var decoy = eval(("decorations." + indexkey + ".pos.y"));
+        var decow = eval(("decorations." + indexkey + ".hitboxes.w"));
+        var decoh = eval(("decorations." + indexkey + ".hitboxes.h"));
+        var result = eval(("CheckPlayerColisions(" + decox + ", " + decoy + ", " + decow + ", " + decoh + ")"));
+        if (result){
+            Player.ground = (decoy - (decoh * 3.5));
+            check = true;
+        }
+        index += 1;
+    }
     //Ips (Iteration per second) counter
     if (ips){
         ipscounter += 1;
@@ -193,7 +210,7 @@ function ResetObjects() {
     }
 }
 
-let Player = {
+var Player = {
     ground: (window.innerHeight - 71),
     pos: {
         x: (window.innerWidth / 32),
@@ -241,7 +258,7 @@ let Player = {
     }
 };
 
-let Obstacles = {
+var Obstacles = {
     test: {
         color: "green",
         pos: {
@@ -259,6 +276,24 @@ let Obstacles = {
     }
 }
 
+var decorations = {
+    test : {
+        color: "red",
+        pos: {
+            x: (window.innerWidth / 1.3),
+            y: (window.innerHeight - 50)
+        },
+        sizes: {
+            w: 500,
+            h: 15
+        },
+        hitboxes: {
+            w: 500,
+            h: 15
+        }
+    }
+}
+
 function CheckPlayerColisions(Obstaclex, Obstacley, Obstaclew, Obstacleh){
     if (Player.pos.x + 50 >= Obstaclex && Player.pos.x <= Obstaclex + Obstaclew && Player.pos.y + 50 >= Obstacley && Player.pos.y<= Obstacley + Obstacleh){
         return true;
@@ -266,7 +301,7 @@ function CheckPlayerColisions(Obstaclex, Obstacley, Obstaclew, Obstacleh){
 }
 
 //Make the player go straight
-setInterval(() => {
+setInterval(function(){
     if (Player.pos.x < (window.innerWidth / 3.5)){
         if (window.innerWidth <= 500){
             Player.pos.x += 2;
@@ -283,25 +318,31 @@ setInterval(() => {
     Render();
 }, 5);
 
-setInterval(() => {
+setInterval(function(){
     if (ips){
         ipscounter_ = ipscounter;
         ipscounter = 0;
     }
 }, 1005);
 
-setInterval(() => {
+setInterval(function(){
     Render();
 }, 1);
 
-let indexkey = "";
-setInterval(() => {
+var indexkey = "";
+setInterval(function(){
     if ((parseInt(Player.pos.x)) >= ((parseInt(window.innerWidth / 3.5)))){
         if (window.innerWidth <= 500){
             var index = 0;
             while (index < (Object.keys(Obstacles).length)){
                 indexkey = Object.keys(Obstacles)[index];
                 eval(("Obstacles." + indexkey + ".pos.x -= 2"));
+                index += 1;
+            }
+            var index = 0;
+            while (index < (Object.keys(decorations).length)){
+                indexkey = Object.keys(decorations)[index];
+                eval(("decorations." + indexkey + ".pos.x -= 2"));
                 index += 1;
             }
         }
@@ -313,6 +354,12 @@ setInterval(() => {
                     eval(("Obstacles." + indexkey + ".pos.x -= 3"));
                     index += 1;
                 }
+                var index = 0;
+                while (index < (Object.keys(decorations).length)){
+                    indexkey = Object.keys(decorations)[index];
+                    eval(("decorations." + indexkey + ".pos.x -= 3"));
+                    index += 1;
+                }
             }
             else{
                 var index = 0;
@@ -321,7 +368,33 @@ setInterval(() => {
                     eval(("Obstacles." + indexkey + ".pos.x -= 4"));
                     index += 1;
                 }
+                var index = 0;
+                while (index < (Object.keys(decorations).length)){
+                    indexkey = Object.keys(decorations)[index];
+                    eval(("decorations." + indexkey + ".pos.x -= 4"));
+                    index += 1;
+                }
             }
         }
     }
 }, 5);
+
+setInterval(async function(){
+    var index = 0;
+    while (index < (Object.keys(decorations).length)){
+        indexkey = Object.keys(decorations)[index];
+        var decox = eval(("decorations." + indexkey + ".pos.x"));
+        var decoy = eval(("decorations." + indexkey + ".pos.y"));
+        var decow = eval(("decorations." + indexkey + ".hitboxes.w"));
+        var decoh = eval(("decorations." + indexkey + ".hitboxes.h"));
+        var result = eval(("CheckPlayerColisions(" + decox + ", " + decoy + ", " + decow + ", " + decoh + ")"));
+        if (!result){
+            Player.ground = (window.innerHeight - 71);
+            if (check){
+                check = false;
+                Player.jump();
+            }
+        }
+        index += 1;
+    }
+}, 5)
