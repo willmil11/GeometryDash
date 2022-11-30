@@ -168,7 +168,7 @@ function ResetObjects() {
                 RotateCooldown = false;
                 Cooldown = true;
                 Player.rotate();
-                while (Player.pos.y > (Player.ground - 130)) {
+                while (Player.pos.y > (Player.ground - 135)) {
                     Player.pos.y = Player.pos.y - 4;
                     RotateCooldown = true;
                     Render();
@@ -235,7 +235,7 @@ var Player = {
             RotateCooldown = false;
             Cooldown = true;
             Player.rotate();
-            while (Player.pos.y > (Player.ground - 130)) {
+            while (Player.pos.y > (Player.ground - 135)) {
                 Player.pos.y = Player.pos.y - 4;
                 RotateCooldown = true;
                 Render();
@@ -251,7 +251,7 @@ var Player = {
             }
             RotateCooldown = true;
             //Random square rotation at end of jump animation
-            var random = Math.floor(Math.random() * 4)
+            var random = Math.floor(Math.random() * 4);
             if (Player.lastrandom === undefined){
                 Player.lastrandom = random;
             }
@@ -259,6 +259,7 @@ var Player = {
                 while (random === Player.lastrandom){
                     random = Math.floor(Math.random() * 4)
                 }
+                Player.lastrandom = random;
             }
             if (random === 1){
                 Player.pos.rotation = 0;
