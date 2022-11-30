@@ -168,7 +168,7 @@ function ResetObjects() {
                 RotateCooldown = false;
                 Cooldown = true;
                 Player.rotate();
-                while (Player.pos.y > (Player.ground - 135)) {
+                while (Player.pos.y > (Player.ground - 140)) {
                     Player.pos.y = Player.pos.y - 4;
                     RotateCooldown = true;
                     Render();
@@ -235,7 +235,7 @@ var Player = {
             RotateCooldown = false;
             Cooldown = true;
             Player.rotate();
-            while (Player.pos.y > (Player.ground - 135)) {
+            while (Player.pos.y > (Player.ground - 140)) {
                 Player.pos.y = Player.pos.y - 4;
                 RotateCooldown = true;
                 Render();
