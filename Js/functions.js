@@ -106,9 +106,9 @@ async function Render() {
                 await wait(1000);
                 text.innerHTML = "1";
                 await wait(1000);
-                ResetObjects();
-                BuildApp();
-                Controls();
+                await BuildApp();
+                await Controls();
+                await Reset();
             }
             index += 1;
         }
@@ -128,6 +128,14 @@ async function Render() {
             }
             index += 1;
         }
+        //Render skins
+        var index = 0;
+        while (index < (Object.keys(skins).length)){
+            indexkey = Object.keys(skins)[index];
+            var toexe = eval(("skins." + indexkey + ".code"));
+            eval(toexe);
+            index += 1;
+        }
         //Ips (Iteration per second) counter
         if (ips){
             ipscounter += 1;
@@ -141,71 +149,10 @@ async function Render() {
     }
 
 
-function ResetObjects() {
-    Player = {
-        ground: (window.innerHeight - 71),
-        pos: {
-            x: (window.innerWidth / 32),
-            y: (window.innerHeight - 71),
-            rotation: 0
-        },
-        rotate: async function () {
-            var index = 0;
-            while (index < (360)) {
-                if (RotateCooldown === false) {
-                    Player.pos.rotation += 1;
-                    index += 1;
-                    await wait(10)
-                }
-                else{
-                    await wait(1);
-                }
-            }
-            Player.pos.rotation = 0;
-        },
-        jump: async function () {
-            if (Cooldown === false) {
-                RotateCooldown = false;
-                Cooldown = true;
-                Player.rotate();
-                while (Player.pos.y > (Player.ground - 140)) {
-                    Player.pos.y = Player.pos.y - 4;
-                    RotateCooldown = true;
-                    Render();
-                    RotateCooldown = false;
-                    await wait(1);
-                }
-                while (Player.pos.y < Player.ground) {
-                    Player.pos.y += 4;
-                    RotateCooldown = true;
-                    await Render();
-                    RotateCooldown = false;
-                    await wait(5);
-                }
-                RotateCooldown = true;
-                Player.pos.rotation = 0;
-                Render();
-                Cooldown = false;
-            }
-        }
-    };
-    Obstacles = {
-        test: {
-            color: "green",
-            pos: {
-                x: (window.innerWidth / 2),
-                y: (window.innerHeight - 40)
-            },
-            sizes: {
-                w: 50,
-                h: 20
-            },
-            hitboxes: {
-                w: 50,
-                h: 30
-            }
-        }
-    }
+function Reset() {
+    Player = Player_;
+    Obstacles = Obstacles_;
+    decorations = decorations_;
 }
 
 var Player = {
@@ -285,6 +232,8 @@ var Player = {
     }
 };
 
+var Player_ = Player;
+
 var Obstacles = {
     _1: {
         color: "black",
@@ -293,12 +242,12 @@ var Obstacles = {
             y: (window.innerHeight - 40)
         },
         sizes: {
-            w: 25,
-            h: 20
+            w: 0,
+            h: 0
         },
         hitboxes: {
             w: 25,
-            h: 30
+            h: 20
         }
     },
     _2: {
@@ -308,12 +257,12 @@ var Obstacles = {
             y: (window.innerHeight - 40)
         },
         sizes: {
-            w: 25,
-            h: 20
+            w: 0,
+            h: 0
         },
         hitboxes: {
             w: 25,
-            h: 30
+            h: 20
         }
     },
     _3: {
@@ -323,45 +272,32 @@ var Obstacles = {
             y: (window.innerHeight - 70)
         },
         sizes: {
-            w: 25,
-            h: 50
+            w: 0,
+            h: 0
         },
         hitboxes: {
             w: 25,
-            h: 60
+            h: 50
         }
     },
     _4: {
         color: "black",
         pos: {
             x: (window.innerWidth * 2.7),
-            y: (window.innerHeight - 40)
-        },
-        sizes: {
-            w: 25,
-            h: 20
-        },
-        hitboxes: {
-            w: 25,
-            h: 30
-        }
-    },
-    _5: {
-        color: "black",
-        pos: {
-            x: ((window.innerWidth * 2.7) + 25),
             y: (window.innerHeight - 70)
         },
         sizes: {
-            w: 25,
-            h: 50
+            w: 0,
+            h: 0
         },
         hitboxes: {
             w: 25,
-            h: 60
+            h: 50
         }
     }
 }
+
+var Obstacles_ = Obstacles;
 
 var decorations = {
     test : {
@@ -378,6 +314,23 @@ var decorations = {
             w: 500,
             h: 15
         }
+    }
+}
+
+var decorations_ = decorations;
+
+var skins = {
+    _1: {
+        code: ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._1.pos.x + Obstacles._1.hitboxes.w) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x + (Obstacles._1.hitboxes.w / 2)) + ", " + Obstacles._1.pos.y + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x - (Obstacles._1.hitboxes.w / 11)) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.fill();\nrenderer.endPath();")
+    },
+    _2: {
+        code: ("renderer.fillStyle = 'rgba(11,31,79,355)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._3.pos.x + Obstacles._3.hitboxes.w) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x + (Obstacles._3.hitboxes.w / 2)) + ", " + Obstacles._3.pos.y + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x - (Obstacles._3.hitboxes.w / 11)) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.fill();\nrenderer.endPath();")
+    },
+    _3: {
+        code: ("renderer.fillStyle = 'rgba(11,31,79,355)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._3.pos.x + Obstacles._3.hitboxes.w) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x + (Obstacles._3.hitboxes.w / 2)) + ", " + Obstacles._3.pos.y + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x - (Obstacles._3.hitboxes.w / 11)) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.fill();\nrenderer.endPath();")
+    },
+    _4: {
+        code: ("renderer.fillStyle = 'rgba(11,41,79,455)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._4.pos.x + Obstacles._4.hitboxes.w) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x + (Obstacles._4.hitboxes.w / 2)) + ", " + Obstacles._4.pos.y + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x - (Obstacles._4.hitboxes.w / 11)) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.fill();\nrenderer.endPath();")
     }
 }
 
@@ -438,6 +391,13 @@ requestAnimationFrame(Render)
 var indexkey = "";
 setInterval(function(){
     if ((parseInt(Player.pos.x)) >= ((parseInt(window.innerWidth / 3.5)))){
+        //skins moves
+        skins._1.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._1.pos.x + Obstacles._1.hitboxes.w) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x + (Obstacles._1.hitboxes.w / 2)) + ", " + Obstacles._1.pos.y + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x - (Obstacles._1.hitboxes.w / 11)) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.fill();")
+        skins._2.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._2.pos.x + Obstacles._2.hitboxes.w) + ", " + (Obstacles._2.pos.y + Obstacles._2.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._2.pos.x + (Obstacles._2.hitboxes.w / 2)) + ", " + Obstacles._2.pos.y + ");\nrenderer.lineTo(" + (Obstacles._2.pos.x - (Obstacles._2.hitboxes.w / 11)) + ", " + (Obstacles._2.pos.y + Obstacles._2.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._2.pos.x) + ", " + (Obstacles._2.pos.y + Obstacles._2.hitboxes.h) + ");\nrenderer.fill();")
+        skins._3.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._3.pos.x + Obstacles._3.hitboxes.w) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x + (Obstacles._3.hitboxes.w / 2)) + ", " + Obstacles._3.pos.y + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x - (Obstacles._3.hitboxes.w / 11)) + ", " + (Obstacles._3.pos.y + Obstacles._2.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.fill();")
+        skins._4.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._4.pos.x + Obstacles._4.hitboxes.w) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x + (Obstacles._4.hitboxes.w / 2)) + ", " + Obstacles._4.pos.y + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x - (Obstacles._4.hitboxes.w / 11)) + ", " + (Obstacles._4.pos.y + Obstacles._2.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.fill();")
+
+        //Rest
         if (window.innerWidth <= 500){
             var index = 0;
             while (index < (Object.keys(Obstacles).length)){
