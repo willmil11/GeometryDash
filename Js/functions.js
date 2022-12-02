@@ -176,12 +176,13 @@ var Player = {
         }
         Player.pos.rotation = 0;
     },
+    jumpheight: 167,
     jump: async function () {
         if (Cooldown === false) {
             RotateCooldown = false;
             Cooldown = true;
             Player.rotate();
-            while (Player.pos.y > (Player.ground - 140)) {
+            while (Player.pos.y > (Player.ground - Player.jumpheight)) {
                 Player.pos.y = Player.pos.y - 4;
                 RotateCooldown = true;
                 Render();
@@ -335,7 +336,7 @@ var Obstacles = {
             h: 0,
         },
         hitboxes: {
-            w: 200,
+            w: 100,
             h: 5
         }   
     },
@@ -367,6 +368,21 @@ var Obstacles = {
         hitboxes: {
             w: 1,
             h: 127
+        }   
+    },
+    _10: {
+        color: "black",
+        pos: {
+            x: (((window.innerWidth * 2.7) + 25) + 25 * 9),
+            y: (window.innerHeight - 25)
+        },
+        sizes: {
+            w: 0,
+            h: 0,
+        },
+        hitboxes: {
+            w: 100,
+            h: 5
         }   
     }
 }
@@ -441,6 +457,9 @@ var skins = {
     },
     _7: {
         code: undefined
+    },
+    _10: {
+        code: undefined
     }
 }
 
@@ -514,6 +533,7 @@ setInterval(function(){
         skins._4.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._4.pos.x + Obstacles._4.hitboxes.w) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x + (Obstacles._4.hitboxes.w / 2)) + ", " + Obstacles._4.pos.y + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x - (Obstacles._4.hitboxes.w / 11)) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.fill();")
         skins._5.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._5.pos.x + Obstacles._5.hitboxes.w) + ", " + (Obstacles._5.pos.y + Obstacles._5.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._5.pos.x + (Obstacles._5.hitboxes.w / 2)) + ", " + Obstacles._5.pos.y + ");\nrenderer.lineTo(" + (Obstacles._5.pos.x - (Obstacles._5.hitboxes.w / 11)) + ", " + (Obstacles._5.pos.y + Obstacles._5.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._5.pos.x) + ", " + (Obstacles._5.pos.y + Obstacles._5.hitboxes.h) + ");\nrenderer.fill();")
         skins._7.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._7.pos.x + Obstacles._7.hitboxes.w) + ", " + (Obstacles._7.pos.y + Obstacles._7.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._7.pos.x + (Obstacles._7.hitboxes.w / 2)) + ", " + Obstacles._7.pos.y + ");\nrenderer.lineTo(" + (Obstacles._7.pos.x - (Obstacles._7.hitboxes.w / 11)) + ", " + (Obstacles._7.pos.y + Obstacles._7.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._7.pos.x) + ", " + (Obstacles._7.pos.y + Obstacles._7.hitboxes.h) + ");\nrenderer.fill();")
+        skins._10.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._10.pos.x + Obstacles._10.hitboxes.w) + ", " + (Obstacles._10.pos.y + Obstacles._10.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._10.pos.x + (Obstacles._10.hitboxes.w / 2)) + ", " + Obstacles._10.pos.y + ");\nrenderer.lineTo(" + (Obstacles._10.pos.x - (Obstacles._10.hitboxes.w / 11)) + ", " + (Obstacles._10.pos.y + Obstacles._10.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._10.pos.x) + ", " + (Obstacles._10.pos.y + Obstacles._10.hitboxes.h) + ");\nrenderer.fill();")
 
         //Rest
         if (window.innerWidth <= 500){
@@ -562,3 +582,12 @@ setInterval(function(){
         }
     }
 }, 5);
+
+//Optimise html canvas
+var canvas = document.getElementById("canvas");
+var renderer = canvas.getContext("2d");
+renderer.imageSmoothingEnabled = false;
+renderer.webkitImageSmoothingEnabled = false;
+renderer.mozImageSmoothingEnabled = false;
+renderer.msImageSmoothingEnabled = false;
+renderer.oImageSmoothingEnabled = false;
