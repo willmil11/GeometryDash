@@ -1,7 +1,7 @@
 //Functions.js script
 //
 
-var Cooldown = false;
+var Cooldown = true;
 var RotateCooldown = false;
 var ips = false;
 var ipscounter = 0;
@@ -93,7 +93,7 @@ async function Render() {
                 var center = document.getElementById("content");
                 center.style.height = ((window.innerHeight / 8) + "px");
                 center.style.width = ((window.innerWidth / 2) + "px");
-                center.style.marginTop = (((window.innerHeight / 4.5) * 2) + "px");
+                center.style.marginTop = (((window.innerHeight / 2) - center.offsetHeight) + "px");
                 center.style.backgroundColor = "rgb(21, 21, 20)";
                 center.innerHTML = "<font color='white' face='arial'><strong><div id='text'></div></strong></font>"
                 var text = document.getElementById("text");
@@ -106,9 +106,10 @@ async function Render() {
                 await wait(1000);
                 text.innerHTML = "1";
                 await wait(1000);
-                await BuildApp();
-                await Controls();
                 await Reset();
+                document.body.innerHTML = "";
+                document.body.style.backgroundImage = "";
+                document.body.style.backgroundColor = "rgb(0, 0, 0)";
             }
             index += 1;
         }
@@ -150,9 +151,7 @@ async function Render() {
 
 
 function Reset() {
-    Player = Player_;
-    Obstacles = Obstacles_;
-    decorations = decorations_;
+    location.reload();
 }
 
 var Player = {
@@ -294,25 +293,130 @@ var Obstacles = {
             w: 25,
             h: 50
         }
+    },
+    _5: {
+        color: "black",
+        pos: {
+            x: ((window.innerWidth * 2.7) + 25),
+            y: (window.innerHeight - 70)
+        },
+        sizes: {
+            w: 0,
+            h: 0
+        },
+        hitboxes: {
+            w: 25,
+            h: 50
+        }
+    },
+    _6: {
+        color: "rgba(10,21,74,255)",
+        pos: {
+            x: (((window.innerWidth * 2.7) + 25) + 27),
+            y: (window.innerHeight - 70)
+        },
+        sizes: {
+            w: 1,
+            h: 47,
+        },
+        hitboxes: {
+            w: 1,
+            h: 47
+        }   
+    },
+    _7: {
+        color: "black",
+        pos: {
+            x: (((window.innerWidth * 2.7) + 25) + 25 * 3),
+            y: (window.innerHeight - 25)
+        },
+        sizes: {
+            w: 0,
+            h: 0,
+        },
+        hitboxes: {
+            w: 200,
+            h: 5
+        }   
+    },
+    _8: {
+        color: "rgba(10,21,74,255)",
+        pos: {
+            x: (((window.innerWidth * 2.7) + 25) + (25 * 7) + 7),
+            y: (window.innerHeight - 117)
+        },
+        sizes: {
+            w: 1,
+            h: 97,
+        },
+        hitboxes: {
+            w: 1,
+            h: 97
+        }   
+    },
+    _9: {
+        color: "rgba(10,21,74,255)",
+        pos: {
+            x: (((window.innerWidth * 2.7) + 25) + (25 * 12) + 7),
+            y: (window.innerHeight - 147)
+        },
+        sizes: {
+            w: 1,
+            h: 127,
+        },
+        hitboxes: {
+            w: 1,
+            h: 127
+        }   
     }
 }
 
 var Obstacles_ = Obstacles;
 
 var decorations = {
-    test : {
-        color: "red",
+    _1: {
+        color: "rgba(10,21,74,255)",
         pos: {
-            x: (window.innerWidth * 4),
-            y: (window.innerHeight - 50)
+            x: (((window.innerWidth * 2.7) + 25) + 27),
+            y: (window.innerHeight - 70)
         },
         sizes: {
-            w: 500,
-            h: 15
+            w: 50,
+            h: 50,
         },
         hitboxes: {
-            w: 500,
-            h: 15
+            w: 50,
+            h: 50
+        }
+    },
+    _2: {
+        color: "rgba(10,21,74,255)",
+        pos: {
+            x: (((window.innerWidth * 2.7) + 25) + (25 * 7) + 7),
+            y: (window.innerHeight - 120)
+        },
+        sizes: {
+            w: 50,
+            h: 100,
+        },
+        hitboxes: {
+            w: 50,
+            h: 100
+        }
+    },
+    _3: {
+        color: "rgba(10,21,74,255)",
+        pos: {
+            x: (((window.innerWidth * 2.7) + 25) + (25 * 12) + 7),
+            y: (window.innerHeight - 140)
+        },
+        sizes: {
+            w: 50,
+            h: 120,
+        },
+        hitboxes: {
+            w: 50,
+            h: 120
         }
     }
 }
@@ -324,13 +428,19 @@ var skins = {
         code: ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._1.pos.x + Obstacles._1.hitboxes.w) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x + (Obstacles._1.hitboxes.w / 2)) + ", " + Obstacles._1.pos.y + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x - (Obstacles._1.hitboxes.w / 11)) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.fill();\nrenderer.endPath();")
     },
     _2: {
-        code: ("renderer.fillStyle = 'rgba(11,31,79,355)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._3.pos.x + Obstacles._3.hitboxes.w) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x + (Obstacles._3.hitboxes.w / 2)) + ", " + Obstacles._3.pos.y + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x - (Obstacles._3.hitboxes.w / 11)) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.fill();\nrenderer.endPath();")
+        code: undefined
     },
     _3: {
-        code: ("renderer.fillStyle = 'rgba(11,31,79,355)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._3.pos.x + Obstacles._3.hitboxes.w) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x + (Obstacles._3.hitboxes.w / 2)) + ", " + Obstacles._3.pos.y + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x - (Obstacles._3.hitboxes.w / 11)) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.fill();\nrenderer.endPath();")
+        code: undefined
     },
     _4: {
-        code: ("renderer.fillStyle = 'rgba(11,41,79,455)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._4.pos.x + Obstacles._4.hitboxes.w) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x + (Obstacles._4.hitboxes.w / 2)) + ", " + Obstacles._4.pos.y + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x - (Obstacles._4.hitboxes.w / 11)) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.fill();\nrenderer.endPath();")
+        code: undefined
+    },
+    _5: {
+        code: undefined
+    },
+    _7: {
+        code: undefined
     }
 }
 
@@ -386,16 +496,24 @@ setInterval(function(){
     }
 }, 1005);
 
+var once = false;
+
 requestAnimationFrame(Render)
 
 var indexkey = "";
 setInterval(function(){
     if ((parseInt(Player.pos.x)) >= ((parseInt(window.innerWidth / 3.5)))){
+        if (!once){
+            once = true;
+            Cooldown = false;
+        }
         //skins moves
         skins._1.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._1.pos.x + Obstacles._1.hitboxes.w) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x + (Obstacles._1.hitboxes.w / 2)) + ", " + Obstacles._1.pos.y + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x - (Obstacles._1.hitboxes.w / 11)) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._1.pos.x) + ", " + (Obstacles._1.pos.y + Obstacles._1.hitboxes.h) + ");\nrenderer.fill();")
         skins._2.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._2.pos.x + Obstacles._2.hitboxes.w) + ", " + (Obstacles._2.pos.y + Obstacles._2.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._2.pos.x + (Obstacles._2.hitboxes.w / 2)) + ", " + Obstacles._2.pos.y + ");\nrenderer.lineTo(" + (Obstacles._2.pos.x - (Obstacles._2.hitboxes.w / 11)) + ", " + (Obstacles._2.pos.y + Obstacles._2.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._2.pos.x) + ", " + (Obstacles._2.pos.y + Obstacles._2.hitboxes.h) + ");\nrenderer.fill();")
-        skins._3.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._3.pos.x + Obstacles._3.hitboxes.w) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x + (Obstacles._3.hitboxes.w / 2)) + ", " + Obstacles._3.pos.y + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x - (Obstacles._3.hitboxes.w / 11)) + ", " + (Obstacles._3.pos.y + Obstacles._2.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.fill();")
-        skins._4.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._4.pos.x + Obstacles._4.hitboxes.w) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x + (Obstacles._4.hitboxes.w / 2)) + ", " + Obstacles._4.pos.y + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x - (Obstacles._4.hitboxes.w / 11)) + ", " + (Obstacles._4.pos.y + Obstacles._2.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.fill();")
+        skins._3.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._3.pos.x + Obstacles._3.hitboxes.w) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x + (Obstacles._3.hitboxes.w / 2)) + ", " + Obstacles._3.pos.y + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x - (Obstacles._3.hitboxes.w / 11)) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._3.pos.x) + ", " + (Obstacles._3.pos.y + Obstacles._3.hitboxes.h) + ");\nrenderer.fill();")
+        skins._4.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._4.pos.x + Obstacles._4.hitboxes.w) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x + (Obstacles._4.hitboxes.w / 2)) + ", " + Obstacles._4.pos.y + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x - (Obstacles._4.hitboxes.w / 11)) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._4.pos.x) + ", " + (Obstacles._4.pos.y + Obstacles._4.hitboxes.h) + ");\nrenderer.fill();")
+        skins._5.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._5.pos.x + Obstacles._5.hitboxes.w) + ", " + (Obstacles._5.pos.y + Obstacles._5.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._5.pos.x + (Obstacles._5.hitboxes.w / 2)) + ", " + Obstacles._5.pos.y + ");\nrenderer.lineTo(" + (Obstacles._5.pos.x - (Obstacles._5.hitboxes.w / 11)) + ", " + (Obstacles._5.pos.y + Obstacles._5.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._5.pos.x) + ", " + (Obstacles._5.pos.y + Obstacles._5.hitboxes.h) + ");\nrenderer.fill();")
+        skins._7.code = ("renderer.fillStyle = 'rgba(11,21,79,255)';\nrenderer.beginPath();\nrenderer.moveTo(" + (Obstacles._7.pos.x + Obstacles._7.hitboxes.w) + ", " + (Obstacles._7.pos.y + Obstacles._7.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._7.pos.x + (Obstacles._7.hitboxes.w / 2)) + ", " + Obstacles._7.pos.y + ");\nrenderer.lineTo(" + (Obstacles._7.pos.x - (Obstacles._7.hitboxes.w / 11)) + ", " + (Obstacles._7.pos.y + Obstacles._7.hitboxes.h) + ");\nrenderer.lineTo(" + (Obstacles._7.pos.x) + ", " + (Obstacles._7.pos.y + Obstacles._7.hitboxes.h) + ");\nrenderer.fill();")
 
         //Rest
         if (window.innerWidth <= 500){

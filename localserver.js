@@ -1,39 +1,44 @@
-let http = require("http");
-let fs = require("fs");
+//Create a localserver to serve the files in the current directory with the http module
 
-console.info("[LocalServer] Running...");
+var http = require('http');
+var fs = require('fs');
 
 http.createServer(function (req, res) {
-    console.info("[Request] Requested url: '" + req.url + "'");
-    if (req.url === "/clear"){
-        console.clear();
-        console.info("[Console] Console has been cleared...");
+    //If requested file is index.html
+    if (req.url === '/') {
+        //Read the file
+        var file = fs.readFileSync((__dirname + "/index.html"));
+        //Html writehead
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        //Write the file
+        res.end(file);
     }
+    //If the requested file ends with .js (check with slice method)
     else{
-    if (req.url === "/" || ((req.url).slice(0, -("1668855878756").length)) === "/?vscodeBrowserReqId="){
+        //Throw the code below in a try catch
         try{
-            res.writeHead(200, {'Content-Type': 'text/html'});
-            res.end(fs.readFileSync((__dirname + "/index.html")));
-        }
-        catch (error){
-            res.writeHead(404);
-            res.end(("An error has occured:<br><br>" + error))
-        }
-    }
-    else{
-        try{
-            if ((req.url).slice(((req.url).length - 2)) === "js"){
-                res.writeHead(200, {'Content-Type': 'text/javascript'});
-                res.end(fs.readFileSync((__dirname + req.url)));
+            if (req.url.slice(-3) === '.js') {
+                //Read the file
+                var file = fs.readFileSync((__dirname + req.url));
+                //Js writehead
+                res.writeHead(200, { 'Content-Type': 'text/javascript' });
+                //Write the file
+                res.end(file);
             }
             else{
-                res.writeHead(200);
-                res.end(fs.readFileSync((__dirname + req.url)));
+                //Read the file
+                var file = fs.readFileSync((__dirname + req.url));
+                //Html writehead    
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                //Write the file
+                res.end(file);
             }
         }
         catch (error){
-            res.writeHead(404);
-            res.end(("An error has occured:<br><br>" + error))
+            //Respond with 404
+            res.writeHead(404, { 'Content-Type': 'text/html' });
+            //Write the file
+            res.end("404 Not Found");
         }
-    }}
+    }
 }).listen(1234);
